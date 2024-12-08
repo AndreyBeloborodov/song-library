@@ -28,7 +28,7 @@ func NewSongHandler(service *service.SongService) *SongHandler {
 // @Success 201 {object} models.DefaultResponse
 // @Failure 400 {object} models.DefaultResponse
 // @Failure 500 {object} models.DefaultResponse
-// @Router /songs [post]
+// @Router /songs/add [post]
 func (h *SongHandler) AddSongHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("[INFO] Received request to add a new song")
 
@@ -364,7 +364,7 @@ func (h *SongHandler) GetSongTextHandler(w http.ResponseWriter, r *http.Request)
 // @Success 200 {object} models.SongDetail
 // @Failure 400 {object} models.DefaultResponse
 // @Failure 500 {object} models.DefaultResponse
-// @Router /info [get]
+// @Router /songs/info [get]
 func (h *SongHandler) InfoHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("[INFO] Received request to get song info")
 

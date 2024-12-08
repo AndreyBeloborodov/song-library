@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/joho/godotenv"
-	"github.com/swaggo/http-swagger"
+	"github.com/swaggo/http-swagger/v2"
 	"log"
 	"net/http"
 	"os"

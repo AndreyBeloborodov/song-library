@@ -106,40 +106,6 @@ definitions:
 info:
   contact: {}
 paths:
-  /info:
-    get:
-      consumes:
-      - application/json
-      description: Retrieve details of a song, including release date, text, and link
-      parameters:
-      - description: Group Name
-        in: query
-        name: group
-        required: true
-        type: string
-      - description: Song Name
-        in: query
-        name: song_name
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.SongDetail'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/models.DefaultResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/models.DefaultResponse'
-      summary: Get song details by group and song name
-      tags:
-      - songs
   /songs:
     get:
       consumes:
@@ -193,6 +159,7 @@ paths:
       summary: Get songs with filtering and pagination
       tags:
       - songs
+  /songs/add:
     post:
       consumes:
       - application/json
@@ -258,6 +225,40 @@ paths:
           schema:
             $ref: '#/definitions/models.DefaultResponse'
       summary: Delete a song by name
+      tags:
+      - songs
+  /songs/info:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve details of a song, including release date, text, and link
+      parameters:
+      - description: Group Name
+        in: query
+        name: group
+        required: true
+        type: string
+      - description: Song Name
+        in: query
+        name: song_name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SongDetail'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.DefaultResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.DefaultResponse'
+      summary: Get song details by group and song name
       tags:
       - songs
   /songs/text:
