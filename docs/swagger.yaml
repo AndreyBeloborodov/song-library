@@ -1,0 +1,345 @@
+definitions:
+  models.AddSongRequest:
+    properties:
+      group:
+        description: Название группы
+        type: string
+      link:
+        description: ссылка на песню
+        type: string
+      release_date:
+        description: Дата релиза
+        type: string
+      song:
+        description: Название песни
+        type: string
+      text:
+        description: Текст песни
+        type: string
+    type: object
+  models.DefaultResponse:
+    properties:
+      message:
+        description: Сообщение о результате операции
+        type: string
+      status:
+        description: HTTP-статус операции
+        type: integer
+    type: object
+  models.Song:
+    properties:
+      created_at:
+        type: string
+      group_name:
+        type: string
+      id:
+        description: UUID
+        type: string
+      link:
+        type: string
+      release_date:
+        type: string
+      song_name:
+        type: string
+      text:
+        type: string
+    type: object
+  models.SongDetail:
+    properties:
+      link:
+        description: Ссылка на песню (например, на YouTube)
+        type: string
+      release_date:
+        description: Дата релиза
+        type: string
+      text:
+        description: Текст песни
+        type: string
+    type: object
+  models.SongTextResponse:
+    properties:
+      group:
+        description: Название группы
+        type: string
+      limit:
+        description: Количество куплетов на страницу
+        type: integer
+      offset:
+        description: Смещение
+        type: integer
+      song_name:
+        description: Название песни
+        type: string
+      total:
+        description: Общее количество куплетов
+        type: integer
+      verses:
+        description: Список куплетов
+        items:
+          type: string
+        type: array
+    type: object
+  models.UpdateSongRequest:
+    properties:
+      new_group:
+        description: Новое название группы
+        type: string
+      new_link:
+        description: ссылка на песню
+        type: string
+      new_release_date:
+        description: Дата релиза
+        type: string
+      new_song_name:
+        description: Новое название песни
+        type: string
+      new_text:
+        description: Новый текст песни
+        type: string
+      old_group:
+        description: Старое название группы
+        type: string
+      old_song_name:
+        description: Название песни, которую нужно обновить
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /info:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve details of a song, including release date, text, and link
+      parameters:
+      - description: Group Name
+        in: query
+        name: group
+        required: true
+        type: string
+      - description: Song Name
+        in: query
+        name: song_name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SongDetail'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.DefaultResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.DefaultResponse'
+      summary: Get song details by group and song name
+      tags:
+      - songs
+  /songs:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve songs from the music library with optional filters and
+        pagination
+      parameters:
+      - description: Group Name
+        in: query
+        name: group
+        type: string
+      - description: Song Name
+        in: query
+        name: song
+        type: string
+      - description: Text of the song
+        in: query
+        name: text
+        type: string
+      - description: Release Date
+        in: query
+        name: release_date
+        type: string
+      - default: 10
+        description: Limit of songs per page
+        in: query
+        name: limit
+        type: integer
+      - default: 0
+        description: Offset for pagination
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Song'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.DefaultResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.DefaultResponse'
+      summary: Get songs with filtering and pagination
+      tags:
+      - songs
+    post:
+      consumes:
+      - application/json
+      description: Add a new song to the music library
+      parameters:
+      - description: Song details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.AddSongRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.DefaultResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.DefaultResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.DefaultResponse'
+      summary: Add a new song
+      tags:
+      - songs
+  /songs/delete:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a song from the music library by song name and group
+      parameters:
+      - description: Song Name
+        in: query
+        name: song_name
+        required: true
+        type: string
+      - description: Group Name
+        in: query
+        name: group
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.DefaultResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.DefaultResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.DefaultResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.DefaultResponse'
+      summary: Delete a song by name
+      tags:
+      - songs
+  /songs/text:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve song text with pagination (verses)
+      parameters:
+      - description: Song Name
+        in: query
+        name: song_name
+        required: true
+        type: string
+      - description: Group Name
+        in: query
+        name: group
+        required: true
+        type: string
+      - default: 5
+        description: Limit of verses per page
+        in: query
+        name: limit
+        type: integer
+      - default: 0
+        description: Offset for pagination
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SongTextResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.DefaultResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.DefaultResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.DefaultResponse'
+      summary: Get song text with pagination
+      tags:
+      - songs
+  /songs/update:
+    put:
+      consumes:
+      - application/json
+      description: Update the song details like group, song name, and text
+      parameters:
+      - description: Updated song details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdateSongRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.DefaultResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.DefaultResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.DefaultResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.DefaultResponse'
+      summary: Update song details
+      tags:
+      - songs
+swagger: "2.0"
