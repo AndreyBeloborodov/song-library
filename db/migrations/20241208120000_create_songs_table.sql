@@ -4,7 +4,9 @@ CREATE TABLE IF NOT EXISTS songs (
     group_name VARCHAR(100) NOT NULL,
     song_name VARCHAR(100) NOT NULL,
     text TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    release_date VARCHAR(20) DEFAULT '',
+    link TEXT DEFAULT ''
     );
 
 -- +goose Down
