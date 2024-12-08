@@ -17,7 +17,7 @@ const docTemplate = `{
     "paths": {
         "/songs": {
             "get": {
-                "description": "Retrieve songs from the music library with optional filters and pagination",
+                "description": "Возвращает список песен с возможностью фильтрации по группе, названию, тексту и дате релиза(вернёт все песни, которые вышли в релиз раньше), а также с пагинацией",
                 "consumes": [
                     "application/json"
                 ],
@@ -25,52 +25,58 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "songs"
+                    "Песни"
                 ],
-                "summary": "Get songs with filtering and pagination",
+                "summary": "Получение песен с фильтрацией и пагинацией",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Group Name",
+                        "example": "\"Muse\"",
+                        "description": "Название группы",
                         "name": "group",
                         "in": "query"
                     },
                     {
                         "type": "string",
-                        "description": "Song Name",
+                        "example": "\"Hysteria\"",
+                        "description": "Название песни",
                         "name": "song",
                         "in": "query"
                     },
                     {
                         "type": "string",
-                        "description": "Text of the song",
+                        "example": "\"It's bugging me, grating me\"",
+                        "description": "Текст песни",
                         "name": "text",
                         "in": "query"
                     },
                     {
                         "type": "string",
-                        "description": "Release Date",
+                        "example": "\"2003-12-15\"",
+                        "description": "Дата релиза",
                         "name": "release_date",
                         "in": "query"
                     },
                     {
                         "type": "integer",
                         "default": 10,
-                        "description": "Limit of songs per page",
+                        "example": 5,
+                        "description": "Лимит песен на страницу",
                         "name": "limit",
                         "in": "query"
                     },
                     {
                         "type": "integer",
                         "default": 0,
-                        "description": "Offset for pagination",
+                        "example": 10,
+                        "description": "Смещение для пагинации",
                         "name": "offset",
                         "in": "query"
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Список песен",
                         "schema": {
                             "type": "array",
                             "items": {
@@ -79,13 +85,13 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
+                        "description": "Ошибка в запросе",
                         "schema": {
                             "$ref": "#/definitions/models.DefaultResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Ошибка сервера",
                         "schema": {
                             "$ref": "#/definitions/models.DefaultResponse"
                         }
@@ -95,7 +101,7 @@ const docTemplate = `{
         },
         "/songs/add": {
             "post": {
-                "description": "Add a new song to the music library",
+                "description": "Добавление новой песни в музыкальную библиотеку",
                 "consumes": [
                     "application/json"
                 ],
@@ -103,12 +109,12 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "songs"
+                    "Песни"
                 ],
-                "summary": "Add a new song",
+                "summary": "Добавление новой песни",
                 "parameters": [
                     {
-                        "description": "Song details",
+                        "description": "Детали новой песни",
                         "name": "request",
                         "in": "body",
                         "required": true,
@@ -119,19 +125,19 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "201": {
-                        "description": "Created",
+                        "description": "Песня успешно добавлена",
                         "schema": {
                             "$ref": "#/definitions/models.DefaultResponse"
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
+                        "description": "Ошибка в запросе",
                         "schema": {
                             "$ref": "#/definitions/models.DefaultResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Ошибка сервера",
                         "schema": {
                             "$ref": "#/definitions/models.DefaultResponse"
                         }
@@ -141,7 +147,7 @@ const docTemplate = `{
         },
         "/songs/delete": {
             "delete": {
-                "description": "Delete a song from the music library by song name and group",
+                "description": "Удаление песни из музыкальной библиотеки по названию и имени группы",
                 "consumes": [
                     "application/json"
                 ],
@@ -149,20 +155,22 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "songs"
+                    "Песни"
                 ],
-                "summary": "Delete a song by name",
+                "summary": "Удаление песни",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Song Name",
+                        "example": "\"Supermassive Black Hole\"",
+                        "description": "Название песни",
                         "name": "song_name",
                         "in": "query",
                         "required": true
                     },
                     {
                         "type": "string",
-                        "description": "Group Name",
+                        "example": "\"Muse\"",
+                        "description": "Название группы",
                         "name": "group",
                         "in": "query",
                         "required": true
@@ -170,25 +178,25 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Песня успешно удалена",
                         "schema": {
                             "$ref": "#/definitions/models.DefaultResponse"
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
+                        "description": "Ошибка в запросе",
                         "schema": {
                             "$ref": "#/definitions/models.DefaultResponse"
                         }
                     },
                     "404": {
-                        "description": "Not Found",
+                        "description": "Песня не найдена",
                         "schema": {
                             "$ref": "#/definitions/models.DefaultResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Ошибка сервера",
                         "schema": {
                             "$ref": "#/definitions/models.DefaultResponse"
                         }
@@ -198,7 +206,7 @@ const docTemplate = `{
         },
         "/songs/info": {
             "get": {
-                "description": "Retrieve details of a song, including release date, text, and link",
+                "description": "Возвращает информацию о песне, включая дату релиза, текст и ссылку",
                 "consumes": [
                     "application/json"
                 ],
@@ -206,20 +214,22 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "songs"
+                    "Песни"
                 ],
-                "summary": "Get song details by group and song name",
+                "summary": "Получение информации о песне",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Group Name",
+                        "example": "\"Imagine Dragons\"",
+                        "description": "Название группы",
                         "name": "group",
                         "in": "query",
                         "required": true
                     },
                     {
                         "type": "string",
-                        "description": "Song Name",
+                        "example": "\"Radioactive\"",
+                        "description": "Название песни",
                         "name": "song_name",
                         "in": "query",
                         "required": true
@@ -227,19 +237,19 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Детали песни",
                         "schema": {
                             "$ref": "#/definitions/models.SongDetail"
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
+                        "description": "Ошибка в запросе",
                         "schema": {
                             "$ref": "#/definitions/models.DefaultResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Ошибка сервера",
                         "schema": {
                             "$ref": "#/definitions/models.DefaultResponse"
                         }
@@ -249,7 +259,7 @@ const docTemplate = `{
         },
         "/songs/text": {
             "get": {
-                "description": "Retrieve song text with pagination (verses)",
+                "description": "Возвращает текст песни с разбивкой на куплеты и поддержкой пагинации",
                 "consumes": [
                     "application/json"
                 ],
@@ -257,60 +267,64 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "songs"
+                    "Песни"
                 ],
-                "summary": "Get song text with pagination",
+                "summary": "Получение текста песни с пагинацией",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Song Name",
+                        "example": "\"Bohemian Rhapsody\"",
+                        "description": "Название песни",
                         "name": "song_name",
                         "in": "query",
                         "required": true
                     },
                     {
                         "type": "string",
-                        "description": "Group Name",
+                        "example": "\"Queen\"",
+                        "description": "Название группы",
                         "name": "group",
                         "in": "query",
                         "required": true
                     },
                     {
                         "type": "integer",
-                        "default": 5,
-                        "description": "Limit of verses per page",
+                        "default": 3,
+                        "example": 2,
+                        "description": "Лимит куплетов на страницу",
                         "name": "limit",
                         "in": "query"
                     },
                     {
                         "type": "integer",
                         "default": 0,
-                        "description": "Offset for pagination",
+                        "example": 1,
+                        "description": "Смещение для пагинации",
                         "name": "offset",
                         "in": "query"
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Текст песни с пагинацией",
                         "schema": {
                             "$ref": "#/definitions/models.SongTextResponse"
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
+                        "description": "Ошибка в запросе",
                         "schema": {
                             "$ref": "#/definitions/models.DefaultResponse"
                         }
                     },
                     "404": {
-                        "description": "Not Found",
+                        "description": "Песня не найдена",
                         "schema": {
                             "$ref": "#/definitions/models.DefaultResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Ошибка сервера",
                         "schema": {
                             "$ref": "#/definitions/models.DefaultResponse"
                         }
@@ -320,7 +334,7 @@ const docTemplate = `{
         },
         "/songs/update": {
             "put": {
-                "description": "Update the song details like group, song name, and text",
+                "description": "Обновление информации о песне, включая название, группу и текст",
                 "consumes": [
                     "application/json"
                 ],
@@ -328,12 +342,12 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "songs"
+                    "Песни"
                 ],
-                "summary": "Update song details",
+                "summary": "Обновление данных песни",
                 "parameters": [
                     {
-                        "description": "Updated song details",
+                        "description": "Обновленные данные песни",
                         "name": "request",
                         "in": "body",
                         "required": true,
@@ -344,25 +358,25 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Песня успешно обновлена",
                         "schema": {
                             "$ref": "#/definitions/models.DefaultResponse"
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
+                        "description": "Ошибка в запросе",
                         "schema": {
                             "$ref": "#/definitions/models.DefaultResponse"
                         }
                     },
                     "404": {
-                        "description": "Not Found",
+                        "description": "Песня не найдена",
                         "schema": {
                             "$ref": "#/definitions/models.DefaultResponse"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Ошибка сервера",
                         "schema": {
                             "$ref": "#/definitions/models.DefaultResponse"
                         }

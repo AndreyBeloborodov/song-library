@@ -110,32 +110,39 @@ paths:
     get:
       consumes:
       - application/json
-      description: Retrieve songs from the music library with optional filters and
-        pagination
+      description: Возвращает список песен с возможностью фильтрации по группе, названию,
+        тексту и дате релиза(вернёт все песни, которые вышли в релиз раньше), а также
+        с пагинацией
       parameters:
-      - description: Group Name
+      - description: Название группы
+        example: '"Muse"'
         in: query
         name: group
         type: string
-      - description: Song Name
+      - description: Название песни
+        example: '"Hysteria"'
         in: query
         name: song
         type: string
-      - description: Text of the song
+      - description: Текст песни
+        example: '"It''s bugging me, grating me"'
         in: query
         name: text
         type: string
-      - description: Release Date
+      - description: Дата релиза
+        example: '"2003-12-15"'
         in: query
         name: release_date
         type: string
       - default: 10
-        description: Limit of songs per page
+        description: Лимит песен на страницу
+        example: 5
         in: query
         name: limit
         type: integer
       - default: 0
-        description: Offset for pagination
+        description: Смещение для пагинации
+        example: 10
         in: query
         name: offset
         type: integer
@@ -143,29 +150,29 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Список песен
           schema:
             items:
               $ref: '#/definitions/models.Song'
             type: array
         "400":
-          description: Bad Request
+          description: Ошибка в запросе
           schema:
             $ref: '#/definitions/models.DefaultResponse'
         "500":
-          description: Internal Server Error
+          description: Ошибка сервера
           schema:
             $ref: '#/definitions/models.DefaultResponse'
-      summary: Get songs with filtering and pagination
+      summary: Получение песен с фильтрацией и пагинацией
       tags:
-      - songs
+      - Песни
   /songs/add:
     post:
       consumes:
       - application/json
-      description: Add a new song to the music library
+      description: Добавление новой песни в музыкальную библиотеку
       parameters:
-      - description: Song details
+      - description: Детали новой песни
         in: body
         name: request
         required: true
@@ -175,32 +182,34 @@ paths:
       - application/json
       responses:
         "201":
-          description: Created
+          description: Песня успешно добавлена
           schema:
             $ref: '#/definitions/models.DefaultResponse'
         "400":
-          description: Bad Request
+          description: Ошибка в запросе
           schema:
             $ref: '#/definitions/models.DefaultResponse'
         "500":
-          description: Internal Server Error
+          description: Ошибка сервера
           schema:
             $ref: '#/definitions/models.DefaultResponse'
-      summary: Add a new song
+      summary: Добавление новой песни
       tags:
-      - songs
+      - Песни
   /songs/delete:
     delete:
       consumes:
       - application/json
-      description: Delete a song from the music library by song name and group
+      description: Удаление песни из музыкальной библиотеки по названию и имени группы
       parameters:
-      - description: Song Name
+      - description: Название песни
+        example: '"Supermassive Black Hole"'
         in: query
         name: song_name
         required: true
         type: string
-      - description: Group Name
+      - description: Название группы
+        example: '"Muse"'
         in: query
         name: group
         required: true
@@ -209,36 +218,38 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Песня успешно удалена
           schema:
             $ref: '#/definitions/models.DefaultResponse'
         "400":
-          description: Bad Request
+          description: Ошибка в запросе
           schema:
             $ref: '#/definitions/models.DefaultResponse'
         "404":
-          description: Not Found
+          description: Песня не найдена
           schema:
             $ref: '#/definitions/models.DefaultResponse'
         "500":
-          description: Internal Server Error
+          description: Ошибка сервера
           schema:
             $ref: '#/definitions/models.DefaultResponse'
-      summary: Delete a song by name
+      summary: Удаление песни
       tags:
-      - songs
+      - Песни
   /songs/info:
     get:
       consumes:
       - application/json
-      description: Retrieve details of a song, including release date, text, and link
+      description: Возвращает информацию о песне, включая дату релиза, текст и ссылку
       parameters:
-      - description: Group Name
+      - description: Название группы
+        example: '"Imagine Dragons"'
         in: query
         name: group
         required: true
         type: string
-      - description: Song Name
+      - description: Название песни
+        example: '"Radioactive"'
         in: query
         name: song_name
         required: true
@@ -247,43 +258,47 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Детали песни
           schema:
             $ref: '#/definitions/models.SongDetail'
         "400":
-          description: Bad Request
+          description: Ошибка в запросе
           schema:
             $ref: '#/definitions/models.DefaultResponse'
         "500":
-          description: Internal Server Error
+          description: Ошибка сервера
           schema:
             $ref: '#/definitions/models.DefaultResponse'
-      summary: Get song details by group and song name
+      summary: Получение информации о песне
       tags:
-      - songs
+      - Песни
   /songs/text:
     get:
       consumes:
       - application/json
-      description: Retrieve song text with pagination (verses)
+      description: Возвращает текст песни с разбивкой на куплеты и поддержкой пагинации
       parameters:
-      - description: Song Name
+      - description: Название песни
+        example: '"Bohemian Rhapsody"'
         in: query
         name: song_name
         required: true
         type: string
-      - description: Group Name
+      - description: Название группы
+        example: '"Queen"'
         in: query
         name: group
         required: true
         type: string
-      - default: 5
-        description: Limit of verses per page
+      - default: 3
+        description: Лимит куплетов на страницу
+        example: 2
         in: query
         name: limit
         type: integer
       - default: 0
-        description: Offset for pagination
+        description: Смещение для пагинации
+        example: 1
         in: query
         name: offset
         type: integer
@@ -291,31 +306,31 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Текст песни с пагинацией
           schema:
             $ref: '#/definitions/models.SongTextResponse'
         "400":
-          description: Bad Request
+          description: Ошибка в запросе
           schema:
             $ref: '#/definitions/models.DefaultResponse'
         "404":
-          description: Not Found
+          description: Песня не найдена
           schema:
             $ref: '#/definitions/models.DefaultResponse'
         "500":
-          description: Internal Server Error
+          description: Ошибка сервера
           schema:
             $ref: '#/definitions/models.DefaultResponse'
-      summary: Get song text with pagination
+      summary: Получение текста песни с пагинацией
       tags:
-      - songs
+      - Песни
   /songs/update:
     put:
       consumes:
       - application/json
-      description: Update the song details like group, song name, and text
+      description: Обновление информации о песне, включая название, группу и текст
       parameters:
-      - description: Updated song details
+      - description: Обновленные данные песни
         in: body
         name: request
         required: true
@@ -325,22 +340,22 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Песня успешно обновлена
           schema:
             $ref: '#/definitions/models.DefaultResponse'
         "400":
-          description: Bad Request
+          description: Ошибка в запросе
           schema:
             $ref: '#/definitions/models.DefaultResponse'
         "404":
-          description: Not Found
+          description: Песня не найдена
           schema:
             $ref: '#/definitions/models.DefaultResponse'
         "500":
-          description: Internal Server Error
+          description: Ошибка сервера
           schema:
             $ref: '#/definitions/models.DefaultResponse'
-      summary: Update song details
+      summary: Обновление данных песни
       tags:
-      - songs
+      - Песни
 swagger: "2.0"

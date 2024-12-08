@@ -19,15 +19,15 @@ func NewSongHandler(service *service.SongService) *SongHandler {
 }
 
 // AddSongHandler добавляет новую песню
-// @Summary Add a new song
-// @Description Add a new song to the music library
-// @Tags songs
+// @Summary Добавление новой песни
+// @Description Добавление новой песни в музыкальную библиотеку
+// @Tags Песни
 // @Accept json
 // @Produce json
-// @Param request body models.AddSongRequest true "Song details"
-// @Success 201 {object} models.DefaultResponse
-// @Failure 400 {object} models.DefaultResponse
-// @Failure 500 {object} models.DefaultResponse
+// @Param request body models.AddSongRequest true "Детали новой песни"
+// @Success 201 {object} models.DefaultResponse "Песня успешно добавлена"
+// @Failure 400 {object} models.DefaultResponse "Ошибка в запросе"
+// @Failure 500 {object} models.DefaultResponse "Ошибка сервера"
 // @Router /songs/add [post]
 func (h *SongHandler) AddSongHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("[INFO] Received request to add a new song")
@@ -76,17 +76,17 @@ func (h *SongHandler) AddSongHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // DeleteSongHandler удаляет песню по названию
-// @Summary Delete a song by name
-// @Description Delete a song from the music library by song name and group
-// @Tags songs
+// @Summary Удаление песни
+// @Description Удаление песни из музыкальной библиотеки по названию и имени группы
+// @Tags Песни
 // @Accept json
 // @Produce json
-// @Param song_name query string true "Song Name"
-// @Param group query string true "Group Name"
-// @Success 200 {object} models.DefaultResponse
-// @Failure 400 {object} models.DefaultResponse
-// @Failure 404 {object} models.DefaultResponse
-// @Failure 500 {object} models.DefaultResponse
+// @Param song_name query string true "Название песни" example("Supermassive Black Hole")
+// @Param group query string true "Название группы" example("Muse")
+// @Success 200 {object} models.DefaultResponse "Песня успешно удалена"
+// @Failure 400 {object} models.DefaultResponse "Ошибка в запросе"
+// @Failure 404 {object} models.DefaultResponse "Песня не найдена"
+// @Failure 500 {object} models.DefaultResponse "Ошибка сервера"
 // @Router /songs/delete [delete]
 func (h *SongHandler) DeleteSongHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("[INFO] Received request to delete song")
@@ -146,16 +146,16 @@ func (h *SongHandler) DeleteSongHandler(w http.ResponseWriter, r *http.Request) 
 }
 
 // UpdateSongHandler обновляет данные песни
-// @Summary Update song details
-// @Description Update the song details like group, song name, and text
-// @Tags songs
+// @Summary Обновление данных песни
+// @Description Обновление информации о песне, включая название, группу и текст
+// @Tags Песни
 // @Accept json
 // @Produce json
-// @Param request body models.UpdateSongRequest true "Updated song details"
-// @Success 200 {object} models.DefaultResponse
-// @Failure 400 {object} models.DefaultResponse
-// @Failure 404 {object} models.DefaultResponse
-// @Failure 500 {object} models.DefaultResponse
+// @Param request body models.UpdateSongRequest true "Обновленные данные песни"
+// @Success 200 {object} models.DefaultResponse "Песня успешно обновлена"
+// @Failure 400 {object} models.DefaultResponse "Ошибка в запросе"
+// @Failure 404 {object} models.DefaultResponse "Песня не найдена"
+// @Failure 500 {object} models.DefaultResponse "Ошибка сервера"
 // @Router /songs/update [put]
 func (h *SongHandler) UpdateSongHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("[INFO] Received request to update song")
@@ -209,20 +209,20 @@ func (h *SongHandler) UpdateSongHandler(w http.ResponseWriter, r *http.Request) 
 }
 
 // GetSongsHandler обрабатывает запрос на получение песен с фильтрацией и пагинацией
-// @Summary Get songs with filtering and pagination
-// @Description Retrieve songs from the music library with optional filters and pagination
-// @Tags songs
+// @Summary Получение песен с фильтрацией и пагинацией
+// @Description Возвращает список песен с возможностью фильтрации по группе, названию, тексту и дате релиза(вернёт все песни, которые вышли в релиз раньше), а также с пагинацией
+// @Tags Песни
 // @Accept json
 // @Produce json
-// @Param group query string false "Group Name"
-// @Param song query string false "Song Name"
-// @Param text query string false "Text of the song"
-// @Param release_date query string false "Release Date"
-// @Param limit query int false "Limit of songs per page" default(10)
-// @Param offset query int false "Offset for pagination" default(0)
-// @Success 200 {array} models.Song
-// @Failure 400 {object} models.DefaultResponse
-// @Failure 500 {object} models.DefaultResponse
+// @Param group query string false "Название группы" example("Muse")
+// @Param song query string false "Название песни" example("Hysteria")
+// @Param text query string false "Текст песни" example("It's bugging me, grating me")
+// @Param release_date query string false "Дата релиза" example("2003-12-15")
+// @Param limit query int false "Лимит песен на страницу" default(10) example(5)
+// @Param offset query int false "Смещение для пагинации" default(0) example(10)
+// @Success 200 {array} models.Song "Список песен"
+// @Failure 400 {object} models.DefaultResponse "Ошибка в запросе"
+// @Failure 500 {object} models.DefaultResponse "Ошибка сервера"
 // @Router /songs [get]
 func (h *SongHandler) GetSongsHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("[INFO] Received request to fetch songs")
@@ -277,19 +277,19 @@ func (h *SongHandler) GetSongsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // GetSongTextHandler обрабатывает запрос на получение текста песни с пагинацией
-// @Summary Get song text with pagination
-// @Description Retrieve song text with pagination (verses)
-// @Tags songs
+// @Summary Получение текста песни с пагинацией
+// @Description Возвращает текст песни с разбивкой на куплеты и поддержкой пагинации
+// @Tags Песни
 // @Accept json
 // @Produce json
-// @Param song_name query string true "Song Name"
-// @Param group query string true "Group Name"
-// @Param limit query int false "Limit of verses per page" default(5)
-// @Param offset query int false "Offset for pagination" default(0)
-// @Success 200 {object} models.SongTextResponse
-// @Failure 400 {object} models.DefaultResponse
-// @Failure 404 {object} models.DefaultResponse
-// @Failure 500 {object} models.DefaultResponse
+// @Param song_name query string true "Название песни" example("Bohemian Rhapsody")
+// @Param group query string true "Название группы" example("Queen")
+// @Param limit query int false "Лимит куплетов на страницу" default(3) example(2)
+// @Param offset query int false "Смещение для пагинации" default(0) example(1)
+// @Success 200 {object} models.SongTextResponse "Текст песни с пагинацией"
+// @Failure 400 {object} models.DefaultResponse "Ошибка в запросе"
+// @Failure 404 {object} models.DefaultResponse "Песня не найдена"
+// @Failure 500 {object} models.DefaultResponse "Ошибка сервера"
 // @Router /songs/text [get]
 func (h *SongHandler) GetSongTextHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("[INFO] Received request to fetch song text with pagination")
@@ -319,7 +319,7 @@ func (h *SongHandler) GetSongTextHandler(w http.ResponseWriter, r *http.Request)
 
 	limit, err := strconv.Atoi(r.URL.Query().Get("limit"))
 	if err != nil || limit <= 0 {
-		limit = 5 // Значение по умолчанию
+		limit = 3 // Значение по умолчанию
 	}
 
 	offset, err := strconv.Atoi(r.URL.Query().Get("offset"))
@@ -354,16 +354,16 @@ func (h *SongHandler) GetSongTextHandler(w http.ResponseWriter, r *http.Request)
 }
 
 // InfoHandler обрабатывает запрос на получение информации о песне
-// @Summary Get song details by group and song name
-// @Description Retrieve details of a song, including release date, text, and link
-// @Tags songs
+// @Summary Получение информации о песне
+// @Description Возвращает информацию о песне, включая дату релиза, текст и ссылку
+// @Tags Песни
 // @Accept json
 // @Produce json
-// @Param group query string true "Group Name"
-// @Param song_name query string true "Song Name"
-// @Success 200 {object} models.SongDetail
-// @Failure 400 {object} models.DefaultResponse
-// @Failure 500 {object} models.DefaultResponse
+// @Param group query string true "Название группы" example("Imagine Dragons")
+// @Param song_name query string true "Название песни" example("Radioactive")
+// @Success 200 {object} models.SongDetail "Детали песни"
+// @Failure 400 {object} models.DefaultResponse "Ошибка в запросе"
+// @Failure 500 {object} models.DefaultResponse "Ошибка сервера"
 // @Router /songs/info [get]
 func (h *SongHandler) InfoHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("[INFO] Received request to get song info")
