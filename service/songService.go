@@ -12,10 +12,10 @@ import (
 var ErrSongNotFound = errors.New("song not found")
 
 type SongService struct {
-	Repo *repository.SongRepository
+	Repo repository.SongRepository
 }
 
-func NewSongService(repo *repository.SongRepository) *SongService {
+func NewSongService(repo repository.SongRepository) *SongService {
 	return &SongService{Repo: repo}
 }
 

@@ -27,19 +27,21 @@ func main() {
 	dbname := os.Getenv("DB_NAME")
 	migrationsPath := "./db/migrations"
 
+	dbManager := db.NewDbManager()
+
 	log.Println("[INFO] Initializing database connection...")
-	if err := db.InitDB(host, port, user, password, dbname); err != nil {
+	if err := dbManager.InitDB(host, port, user, password, dbname); err != nil {
 		log.Fatalf("[ERROR] Failed to initialize database: %v", err)
 	}
 	log.Printf("[INFO] Connected to database at %s:%s as user %s", host, port, user)
 
 	log.Println("[INFO] Applying migrations...")
-	if err := db.ApplyMigrations(migrationsPath); err != nil {
+	if err := dbManager.ApplyMigrations(migrationsPath); err != nil {
 		log.Fatalf("[ERROR] Failed to apply migrations: %v", err)
 	}
 
 	log.Println("[INFO] Setting up repositories, services, and handlers...")
-	songRepo := repository.NewSongRepository(db.DB)
+	songRepo := repository.NewSongRepositorySqlDbImpl(dbManager.DB)
 	songService := service.NewSongService(songRepo)
 	songHandler := handlers.NewSongHandler(songService)
 

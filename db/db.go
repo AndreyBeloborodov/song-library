@@ -8,10 +8,16 @@ import (
 	"log"
 )
 
-var DB *sql.DB
+type DbManager struct {
+	DB *sql.DB
+}
+
+func NewDbManager() *DbManager {
+	return &DbManager{DB: &sql.DB{}}
+}
 
 // InitDB инициализирует соединение с базой данных
-func InitDB(host, port, user, password, dbname string) error {
+func (d *DbManager) InitDB(host, port, user, password, dbname string) error {
 	log.Println("[INFO] Initializing database connection...")
 
 	// Формируем DSN (Data Source Name)
@@ -23,14 +29,14 @@ func InitDB(host, port, user, password, dbname string) error {
 
 	// Подключение к базе данных
 	var err error
-	DB, err = sql.Open("postgres", dsn)
+	d.DB, err = sql.Open("postgres", dsn)
 	if err != nil {
 		log.Printf("[ERROR] Failed to open database connection: %v", err)
 		return fmt.Errorf("failed to connect to database: %w", err)
 	}
 
 	// Проверка доступности базы данных
-	if err = DB.Ping(); err != nil {
+	if err = d.DB.Ping(); err != nil {
 		log.Printf("[ERROR] Database is unreachable: %v", err)
 		return fmt.Errorf("database is unreachable: %w", err)
 	}
@@ -40,12 +46,12 @@ func InitDB(host, port, user, password, dbname string) error {
 }
 
 // ApplyMigrations применяет миграции
-func ApplyMigrations(migrationsDir string) error {
+func (d *DbManager) ApplyMigrations(migrationsDir string) error {
 	log.Printf("[INFO] Applying migrations from directory: %s", migrationsDir)
 	goose.SetDialect("postgres")
 
 	// Применение миграций
-	if err := goose.Up(DB, migrationsDir); err != nil {
+	if err := goose.Up(d.DB, migrationsDir); err != nil {
 		log.Printf("[ERROR] Failed to apply migrations: %v", err)
 		return err
 	}
