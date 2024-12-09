@@ -95,7 +95,7 @@ func (r *SongRepository) FindSongs(params models.FilterParams) ([]*models.Song, 
 		WHERE ($1 = '' OR group_name ILIKE '%' || $1 || '%')
 		  AND ($2 = '' OR song_name ILIKE '%' || $2 || '%')
 		  AND ($3 = '' OR text ILIKE '%' || $3 || '%')
-		  AND ($4 = '' OR release_date < $4)
+		  AND ($4 = '' OR release_date <= $4)
 		LIMIT $5 OFFSET $6
 	`
 
